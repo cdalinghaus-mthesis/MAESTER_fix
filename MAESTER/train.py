@@ -10,6 +10,7 @@ from torch.utils.data.distributed import DistributedSampler
 from pretrain_engine import set_deterministic
 from utils import get_plugin, read_yaml, save_checkpoint
 
+import dataset
 
 parser = argparse.ArgumentParser(description="MAESTER Training")
 parser.add_argument("--model_config_dir", default="./config", type=str)
@@ -72,10 +73,10 @@ optimizer = get_plugin("optim", cfg["OPTIM"]["name"])(model, cfg["OPTIM"])
 print(f"From Rank: {rank}, ==> Data ready!")
 engine_func = get_plugin("engine", cfg["ENGINE"]["name"])
 
-
 for epoch in range(cfg["ENGINE"]["epoch"]):
-    epoch_loss = engine_func(model, dataloader, optimizer, rank, epoch, cfg)
+    sampler.set_epoch(epoch)  # keeps DistributedSampler shuffling deterministic per epoch
+    epoch_loss = engine_func(model, dataloader, optimizer, cfg)
     if rank == 0 and (epoch + 1) % 50 == 0:
-        state_dict = model.module.state_dict()
-        save_checkpoint(args.logdir, state_dict, name="latest.pt")
+        save_checkpoint(args.logdir, model.module.state_dict(), name="latest.pt")
+
 print(f"From Rank: {rank}, ==> Training finished!")

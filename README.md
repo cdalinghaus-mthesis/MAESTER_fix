@@ -1,3 +1,10 @@
+# Fixes for MAESTER
+
+Run on single GPU:
+```
+SLURM_NODEID=0 SLURM_LOCALID=0 CUDA_VISIBLE_DEVICES=0 python train.py --model_config_dir ./config --model_config_name default.yaml --world_size 1 --logdir ./checkpoints
+```
+
 # CVPR2023 Highlight | MAESTER: Masked Autoencoder Guided Segmentation at Pixel Resolution for Accurate, Self-Supervised Subcellular Structure Recognition
 
 Check out the [Paper](https://openaccess.thecvf.com/content/CVPR2023/papers/Xie_MAESTER_Masked_Autoencoder_Guided_Segmentation_at_Pixel_Resolution_for_Accurate_CVPR_2023_paper.pdf)!
