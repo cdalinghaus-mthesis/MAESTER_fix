@@ -74,16 +74,11 @@ seg_pred = kmeans.predict(feature_flattern)
 seg_pred[seg_pred == 0] = 4  # class merge
 
 
-#plt.imshow(np.array(src[0].cpu()), interpolation='bilinear')
-#plt.imshow(np.array(seg_pred.reshape(1, orgH , -1)[0]), alpha=0.5, 
-#           interpolation='bilinear')
-#plt.savefig("fig.png")
-
-plt.figure(figsize=(12, 8))  # width=12 inches, height=8 inches
+plt.figure(figsize=(12, 8))
 
 plt.imshow(np.array(src[0].cpu()), interpolation='bilinear')
 plt.imshow(np.array(seg_pred.reshape(1, orgH, -1)[0]), 
            alpha=0.5, interpolation='bilinear')
 
-plt.savefig("figlarger.png", dpi=300)  # optional: increase dpi for better quality
+plt.savefig("cluster_result.png", dpi=300)
 plt.show()
