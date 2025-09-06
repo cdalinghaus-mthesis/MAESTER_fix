@@ -87,7 +87,11 @@ class BetaSegDataset2D(torch.utils.data.dataset.Dataset):
             A tensor representing a randomly sampled 2D slice from the input data.
         """
         curr_data_idx = random.randrange(0, len(self.data_list)) # select dataset
-        axis = random.randrange(0, 3) # select axis
+        
+        # IMPORTANT: For 2D+time data, set axis to 0 to always slice along the time axis
+        # For 3D volumes: keep it as random.randrange(0, 3)
+        #axis = random.randrange(0, 3) # select axis
+        axis = 0
         return self.sample_cord(curr_data_idx, axis) # return 2D slice
 
     def sample_cord(self, data_idx, axis):

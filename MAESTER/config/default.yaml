@@ -16,9 +16,10 @@ MODEL:
 DATASET:
   name: "BetaSegDataset2D"
   path_list:
-    - "../dataset/high_c1_source_tensor"
-    - "../dataset/high_c2_source_tensor"
-    - "../dataset/high_c3_source_tensor"
+    - "../data/dataset/Fluo-N2DL-HeLa_01_source_tensor"
+#    - "../dataset/high_c1_source_tensor"
+#    - "../dataset/high_c2_source_tensor"
+#    - "../dataset/high_c3_source_tensor"
   pad: 4
   aug: "betaaug2D"
   num_workers: 2
@@ -27,8 +28,8 @@ DATASET:
   patch_size: 5
 ENGINE:
   name: "train_engine"
-  epoch: 2800
+  epoch: 33600
 OPTIM:
   name: "adamw"
-  lr: 1.5e-4
+  lr: 1.5e-5
   reg_w: 1.0e-5

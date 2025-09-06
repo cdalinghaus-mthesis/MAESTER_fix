@@ -3,6 +3,7 @@ from typing import Iterable
 import time
 import numpy as np
 import torch
+import matplotlib.pyplot as plt
 
 from utils import register_plugin
 
@@ -30,6 +31,7 @@ def train_one_epoch(
     data_loader: Iterable,
     optimizer: torch.optim.Optimizer,
     cfg: dict,
+    epoch: int,
 ):
     step = 0
     epoch_loss = 0
@@ -38,7 +40,20 @@ def train_one_epoch(
     for batch_data in data_loader:
         optimizer.zero_grad()
         batch_data = batch_data.cuda()
-        batch_loss, _, _ = model(batch_data, mask_ratio=cfg["MODEL"]["mask_ratio"])
+        #batch_loss, _, _ = model(batch_data, mask_ratio=cfg["MODEL"]["mask_ratio"])
+        batch_loss, _pred, _mask = model(batch_data, mask_ratio=cfg["MODEL"]["mask_ratio"])
+
+        core = model.module if isinstance(model, (torch.nn.parallel.DistributedDataParallel,
+                                          torch.nn.DataParallel)) else model
+        unp = core.unpatchify(_pred)
+
+        if step%100==1:
+            plt.imshow(unp[0,0].detach().cpu())
+            plt.savefig(f"{epoch}_{step}.png")
+            print(f"{epoch}_{step}.png saved to disk")
+            plt.close()
+
+        
         batch_loss.backward()
         optimizer.step()
         epoch_loss += batch_loss.item()

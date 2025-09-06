@@ -75,7 +75,7 @@ engine_func = get_plugin("engine", cfg["ENGINE"]["name"])
 
 for epoch in range(cfg["ENGINE"]["epoch"]):
     sampler.set_epoch(epoch)  # keeps DistributedSampler shuffling deterministic per epoch
-    epoch_loss = engine_func(model, dataloader, optimizer, cfg)
+    epoch_loss = engine_func(model, dataloader, optimizer, cfg, epoch)
     if rank == 0 and (epoch + 1) % 50 == 0:
         save_checkpoint(args.logdir, model.module.state_dict(), name="latest.pt")
 
