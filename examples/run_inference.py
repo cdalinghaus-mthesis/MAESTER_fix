@@ -71,7 +71,6 @@ kmeans.fit(feature_flattern)
 #kmeans.cluster_centers_ = kmeans_center
 kmeans._n_threads = 1
 seg_pred = kmeans.predict(feature_flattern)
-seg_pred[seg_pred == 0] = 4  # class merge
 
 
 plt.figure(figsize=(12, 8))
