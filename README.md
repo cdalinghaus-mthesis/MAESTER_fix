@@ -1,9 +1,41 @@
 # Fixes for MAESTER
 
-Run on single GPU:
+Example usage for Fluo-N2DL-HeLa from celltrackingchallenge.net:
+
+### Get data
 ```
+git clone https://github.com/cdalinghaus/MAESTER_fix
+cd MAESTER_fix/
+wget https://data.celltrackingchallenge.net/training-datasets/Fluo-N2DL-HeLa.zip
+unzip Fluo-N2DL-HeLa.zip
+python preprocess.py
+```
+
+### Run training
+
+Important: For 2d+time data (like Fluo-N2DL-HeLa), we want to only slice along the time axis. [This repository is configured to only slice along the time axis](https://github.com/cdalinghaus/MAESTER_fix/blob/main/MAESTER/dataset.py#L94).  
+To slice along all dimensions (for 3d volume data, like in the original MAESTER), [re-enable random selection of slice axis](https://github.com/cdalinghaus/MAESTER_fix/blob/main/MAESTER/dataset.py#L93)
+
+```
+mkdir checkpoints
+cd MAESTER
 SLURM_NODEID=0 SLURM_LOCALID=0 CUDA_VISIBLE_DEVICES=0 python train.py --model_config_dir ./config --model_config_name default.yaml --world_size 1 --logdir ./checkpoints
 ```
+
+### Run inference
+```
+cd examples
+python run_inference.py
+```
+
+#### Example results:
+- 2 clusters:
+<img width="3600" height="2400" alt="image" src="https://github.com/user-attachments/assets/bc378da1-4030-49c7-9aea-6a30d5c3a427" />
+
+
+- 6 clusters:
+<img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/dbce5737-964b-4291-917f-f7725fd3e556" />
+
 
 # CVPR2023 Highlight | MAESTER: Masked Autoencoder Guided Segmentation at Pixel Resolution for Accurate, Self-Supervised Subcellular Structure Recognition
 
