@@ -30,11 +30,13 @@ python run_inference.py
 
 #### Example results:
 - 2 clusters:
-<img width="3600" height="2400" alt="image" src="https://github.com/user-attachments/assets/bc378da1-4030-49c7-9aea-6a30d5c3a427" />
+<img width="3600" height="2400" alt="image" src="https://github.com/user-attachments/assets/c7bd3535-5d82-4943-bd66-d9fcbe1fa5d5" />
+
 
 
 - 6 clusters:
-<img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/dbce5737-964b-4291-917f-f7725fd3e556" />
+<img width="3600" height="2400" alt="image" src="https://github.com/user-attachments/assets/a8ec9239-5abc-4319-9747-9f4e0336eed4" />
+
 
 
 # CVPR2023 Highlight | MAESTER: Masked Autoencoder Guided Segmentation at Pixel Resolution for Accurate, Self-Supervised Subcellular Structure Recognition
