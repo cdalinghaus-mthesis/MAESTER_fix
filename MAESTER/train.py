@@ -12,6 +12,18 @@ from utils import get_plugin, read_yaml, save_checkpoint
 
 import dataset
 
+import dataset
+#from aim import Run
+#run = Run('./aimruns')
+from torch.utils.tensorboard import SummaryWriter
+#writer = SummaryWriter(log_dir="./runs")
+from datetime import datetime
+
+# Option 1: add timestamp
+log_dir = f"./runs/exp_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
+writer = SummaryWriter(log_dir=log_dir)
+
+
 parser = argparse.ArgumentParser(description="MAESTER Training")
 parser.add_argument("--model_config_dir", default="./config", type=str)
 parser.add_argument("--model_config_name", default="deafult.yaml", type=str)
@@ -29,7 +41,9 @@ print("model_config:", cfg, flush=True)
 ngpus_per_node = torch.cuda.device_count()
 current_device = local_rank = int(os.environ.get("SLURM_LOCALID"))
 rank = int(os.environ.get("SLURM_NODEID")) * ngpus_per_node + local_rank
-torch.cuda.set_device(rank)
+#torch.cuda.set_device(rank)
+torch.cuda.set_device(local_rank)
+current_device = local_rank
 
 dist.init_process_group(
     backend=args.dist_backend,
@@ -41,6 +55,9 @@ print(f"From Rank: {rank}, ==> Process group ready!", flush=True)
 print(f"From Rank: {rank}, ==> Building model..")
 model = get_plugin("model", cfg["MODEL"]["name"])(cfg["MODEL"]).cuda()
 
+#checkpoint = torch.load("checkpoints/_latest.pt", map_location="cuda")
+#model.load_state_dict(checkpoint)
+
 model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
 model.embed_dim = cfg["MODEL"]["embed_dim"]
 print(f"From Rank: {rank}, ==> Model ready!", flush=True)
@@ -51,7 +68,8 @@ dataset = get_plugin("dataset", cfg["DATASET"]["name"])(cfg["DATASET"])
 
 # determinstic behaviour
 def seed_worker(worker_id):
-    set_deterministic()
+    #set_deterministic()
+    pass
 
 
 g = torch.Generator()
@@ -76,6 +94,7 @@ engine_func = get_plugin("engine", cfg["ENGINE"]["name"])
 for epoch in range(cfg["ENGINE"]["epoch"]):
     sampler.set_epoch(epoch)  # keeps DistributedSampler shuffling deterministic per epoch
     epoch_loss = engine_func(model, dataloader, optimizer, cfg, epoch)
+    writer.add_scalar("train/loss", epoch_loss, epoch)
     if rank == 0 and (epoch + 1) % 50 == 0:
         save_checkpoint(args.logdir, model.module.state_dict(), name="latest.pt")
 

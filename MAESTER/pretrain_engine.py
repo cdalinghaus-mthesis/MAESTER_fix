@@ -42,20 +42,30 @@ def train_one_epoch(
         batch_data = batch_data.cuda()
         #batch_loss, _, _ = model(batch_data, mask_ratio=cfg["MODEL"]["mask_ratio"])
         batch_loss, _pred, _mask = model(batch_data, mask_ratio=cfg["MODEL"]["mask_ratio"])
+        #print(_mask.bool())
+        #_pred[~(_mask.bool())] = 0.0
 
-        core = model.module if isinstance(model, (torch.nn.parallel.DistributedDataParallel,
-                                          torch.nn.DataParallel)) else model
-        unp = core.unpatchify(_pred)
+        #core = model.module if isinstance(model, (torch.nn.parallel.DistributedDataParallel,
+        #                                  torch.nn.DataParallel)) else model
+        #unp = core.unpatchify(_pred)
 
-        if step%100==1:
-            plt.imshow(unp[0,0].detach().cpu())
-            plt.savefig(f"{epoch}_{step}.png")
-            print(f"{epoch}_{step}.png saved to disk")
-            plt.close()
 
         
         batch_loss.backward()
         optimizer.step()
         epoch_loss += batch_loss.item()
         step += 1
+
+        if step%100==1:
+            _pred[~(_mask.bool())] = 0.0
+            core = model.module if isinstance(model, (torch.nn.parallel.DistributedDataParallel,
+                                          torch.nn.DataParallel)) else model
+            unp = core.unpatchify(_pred)
+            fig, ax = plt.subplots(1,2) 
+            ax.flat[0].imshow(batch_data[0,0].detach().cpu())
+            ax.flat[1].imshow(unp[0,0].detach().cpu())
+            fig.savefig(f"{epoch}_{step}.png")
+            print(f"{epoch}_{step}.png saved to disk")
+            plt.close()
+
     return epoch_loss / step
