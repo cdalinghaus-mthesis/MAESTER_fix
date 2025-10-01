@@ -22,6 +22,22 @@ cd MAESTER
 SLURM_NODEID=0 SLURM_LOCALID=0 CUDA_VISIBLE_DEVICES=0 python train.py --model_config_dir ./config --model_config_name default.yaml --world_size 1 --logdir ./checkpoints
 ```
 
+Using 4x A100:
+```
+srun -p grete:shared -N 1 -n 4 --cpus-per-task=8 \
+     --gpus=A100:4 --constraint=80gb_vram \
+     --time=12:00:00 --mem=0 --preserve-env \
+     bash -lc 'source ~/.bashrc && conda activate maester && \
+               MASTER_ADDR=$(hostname) MASTER_PORT=29500 WORLD_SIZE=4 \
+               RANK=$SLURM_PROCID LOCAL_RANK=$SLURM_LOCALID \
+               python train.py \
+                 --model_config_dir ./config \
+                 --model_config_name default.yaml \
+                 --init_method env:// \
+                 --world_size 4 \
+                 --logdir ./checkpoints'
+```
+
 ### Run inference
 ```
 cd examples
