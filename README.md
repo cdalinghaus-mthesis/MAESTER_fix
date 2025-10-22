@@ -4,7 +4,7 @@ Example usage for Fluo-N2DL-HeLa from celltrackingchallenge.net:
 
 ### Get data
 ```
-git clone https://github.com/cdalinghaus/MAESTER_fix
+git clone https://github.com/cdalinghaus-mthesis/MAESTER_fix
 cd MAESTER_fix/
 wget https://data.celltrackingchallenge.net/training-datasets/Fluo-N2DL-HeLa.zip
 unzip Fluo-N2DL-HeLa.zip
@@ -13,8 +13,8 @@ python preprocess.py
 
 ### Run training
 
-Important: For 2d+time data (like Fluo-N2DL-HeLa), we want to only slice along the time axis. [This repository is configured to only slice along the time axis](https://github.com/cdalinghaus/MAESTER_fix/blob/main/MAESTER/dataset.py#L94).  
-To slice along all dimensions (for 3d volume data, like in the original MAESTER), [re-enable random selection of slice axis](https://github.com/cdalinghaus/MAESTER_fix/blob/main/MAESTER/dataset.py#L93)
+Important: For 2d+time data (like Fluo-N2DL-HeLa), we want to only slice along the time axis. [This repository is configured to only slice along the time axis](https://github.com/cdalinghaus-mthesis/MAESTER_fix/blob/main/MAESTER/dataset.py#L94).  
+To slice along all dimensions (for 3d volume data, like in the original MAESTER), [re-enable random selection of slice axis](https://github.com/cdalinghaus-mthesis/MAESTER_fix/blob/main/MAESTER/dataset.py#L93)
 
 ```
 mkdir checkpoints
