@@ -96,6 +96,6 @@ for epoch in range(cfg["ENGINE"]["epoch"]):
     epoch_loss = engine_func(model, dataloader, optimizer, cfg, epoch)
     writer.add_scalar("train/loss", epoch_loss, epoch)
     if rank == 0 and (epoch + 1) % 50 == 0:
-        save_checkpoint(args.logdir, model.module.state_dict(), name="latest.pt")
+        save_checkpoint(args.logdir, model.module.state_dict(), name=f"model_{epoch}.pt")
 
 print(f"From Rank: {rank}, ==> Training finished!")
