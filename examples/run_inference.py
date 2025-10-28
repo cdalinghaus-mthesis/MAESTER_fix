@@ -14,7 +14,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 config="default"
 cfg = read_yaml(f"../MAESTER/config/{config}.yaml")
-model_weights = torch.load(f"../MAESTER/model_weights/{config}/model.pt", map_location="cpu")
+model_weights = torch.load(f"../MAESTER/checkpoints/model_18349.pt", map_location="cpu")
 #kmeans_center = np.loadtxt(f"../MAESTER/model_weights/{config}/k6.txt")
 storage_path = "./temp.pth" # path to save the intermediate results
 K_CENTRE = 2
@@ -55,8 +55,8 @@ print(result.shape)
 
 
 # select two slices for inference
-START, END= 10, 12
-src = result[START:END]
+#START, END= 10, 12
+src = result[:]
 rank=0
 ngpus_per_node=1
 run_inference(rank, ngpus_per_node, src, cfg, model, storage_path, device)
@@ -81,3 +81,6 @@ plt.imshow(np.array(seg_pred.reshape(1, orgH, -1)[0]),
 
 plt.savefig("cluster_result.png", dpi=300)
 plt.show()
+
+print(feature_storage.shape)
+torch.save(feature_storage, "feature_storage.pt")
