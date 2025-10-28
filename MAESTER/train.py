@@ -9,8 +9,7 @@ from torch.utils.data import DataLoader
 from torch.utils.data.distributed import DistributedSampler
 from pretrain_engine import set_deterministic
 from utils import get_plugin, read_yaml, save_checkpoint
-
-import dataset
+import os
 
 import dataset
 #from aim import Run
@@ -18,6 +17,8 @@ import dataset
 from torch.utils.tensorboard import SummaryWriter
 #writer = SummaryWriter(log_dir="./runs")
 from datetime import datetime
+
+os.system("mkdir images")
 
 # Option 1: add timestamp
 log_dir = f"./runs/exp_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"

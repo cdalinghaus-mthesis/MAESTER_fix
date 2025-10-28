@@ -64,8 +64,8 @@ def train_one_epoch(
             fig, ax = plt.subplots(1,2) 
             ax.flat[0].imshow(batch_data[0,0].detach().cpu())
             ax.flat[1].imshow(unp[0,0].detach().cpu())
-            fig.savefig(f"{epoch}_{step}.png")
-            print(f"{epoch}_{step}.png saved to disk")
+            fig.savefig(f"images/{epoch}_{step}.png")
+            print(f"images/{epoch}_{step}.png saved to disk")
             plt.close()
 
     return epoch_loss / step
